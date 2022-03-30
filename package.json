@@ -1,0 +1,26 @@
+{
+  "name": "luizalabs",
+  "version": "1.0.0",
+  "description": "desafio luizalabs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessicamarcomini/luizalabs.git"
+  },
+  "author": "Jessica Marcomini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jessicamarcomini/luizalabs/issues"
+  },
+  "homepage": "https://github.com/jessicamarcomini/luizalabs#readme",
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongodb": "^4.4.1"
+  }
+}
