@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import { Customer } from './types';
 
 //FIXME: send password and user separately in email
-const uri = "mongodb+srv://jessicamarcomini:5ZMN2bbQ3KNitDzx@cluster0.gzyci.mongodb.net/luizalabs?retryWrites=true&w=majority";
+const uri = "";
 
 async function listCollections(): Promise<void> {
     const client = new MongoClient(uri);
