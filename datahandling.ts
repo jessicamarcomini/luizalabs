@@ -101,6 +101,23 @@ export async function removeCustomer(email: string): Promise<boolean> {
     }
 }
 
+export async function getCustomerProductIds(email: string): Promise<string[]> {
+    const client = new MongoClient(uri);
+    await client.connect();
+
+    let foundWishlist;
+    try {
+        foundWishlist = await client.db().collection('wishlists').findOne({ email: email });
+    } catch (error) {
+        console.error('No wishlist was found for this customer.');
+    } finally {
+        await client.close();
+        return foundWishlist.productIds;
+    }
+}
+
+// getCustomerProductIds('je.marcom@gmail.com');
+
 // removeCustomer('je.marcom@gmail.com');
 
 // updateCustomer('test@gmail.com', 'Jessica Marcomini', 'je.marcom@gmail.com');
