@@ -1,6 +1,6 @@
 
 import { MongoClient } from 'mongodb';
-import { Customer } from './types';
+import { Customer, Wishlist } from './types';
 
 //FIXME: send password and user separately in email
 const uri = "";
@@ -13,26 +13,6 @@ async function listCollections(): Promise<void> {
     console.log(await colls);
 
     await client.close();
-}
-
-export async function addCustomer(customer: Customer): Promise<void> {
-    const client = new MongoClient(uri);
-    await client.connect();
-
-    const existingCustomer = await findCustomer(customer.email);
-    if (!!existingCustomer) {
-        console.error(`Email ${customer.email} already exists in the database.`);
-        return;
-    }
-
-    try {
-        await client.db().collection('customers').insertOne(customer);
-        console.log('Customer was added to the database!');
-    } catch (err) {
-        console.log(`Unable to add customer to the database. Err: ${err}`);
-    } finally {
-        await client.close();
-    }
 }
 
 export async function findCustomer(email: string): Promise<Customer> {
@@ -50,17 +30,41 @@ export async function findCustomer(email: string): Promise<Customer> {
     }
 }
 
+export async function addCustomer(customer: Customer): Promise<boolean> {
+    const client = new MongoClient(uri);
+    await client.connect();
+
+    const existingCustomer = await findCustomer(customer.email);
+    if (!!existingCustomer) {
+        console.error(`Email ${customer.email} already exists in the database.`);
+        return false;
+    }
+
+    let found = false;
+    try {
+        await client.db().collection('customers').insertOne(customer);
+        console.log('Customer was added to the database!');
+        found = true;
+    } catch (err) {
+        console.log(`Unable to add customer to the database. Err: ${err}`);
+    } finally {
+        await client.close();
+        return found;
+    }
+}
+
 export async function updateCustomer(email: string, newName?: string, newEmail?: string): Promise<boolean> {
     const client = new MongoClient(uri);
     await client.connect();
 
-    try {
-        const customer = await findCustomer(email);
-        if (!customer) {
-            console.error(`Email ${email} is not registered yet.`);
-            return false;
-        }
+    const customer = await findCustomer(email);
+    if (!customer) {
+        console.error(`Email ${email} is not registered yet.`);
+        return false;
+    }
 
+    let updated = false;
+    try {
         const newCustomer: Customer = {
             name: newName ? newName : customer.name,
             email: newEmail ? newEmail : customer.email
@@ -72,11 +76,12 @@ export async function updateCustomer(email: string, newName?: string, newEmail?:
             { upsert: false }
         );
         console.log('Customer was updated!');
+        updated = true;
     } catch (err) {
         console.log(`Unable to update customer. Err: ${err}`);
     } finally {
         await client.close();
-        return true;
+        return updated;
     }
 }
 
@@ -84,20 +89,22 @@ export async function removeCustomer(email: string): Promise<boolean> {
     const client = new MongoClient(uri);
     await client.connect();
 
-    try {
-        const customer = await findCustomer(email);
-        if (!customer) {
-            console.error(`Email ${email} is not registered yet.`);
-            return false;
-        }
+    const customer = await findCustomer(email);
+    if (!customer) {
+        console.error(`Email ${email} is not registered yet.`);
+        return false;
+    }
 
+    let removed = false;
+    try {
         await client.db().collection('customers').deleteOne({ _id: customer._id });
         console.log('Customer was deleted!');
+        removed = true;
     } catch (err) {
         console.log(`Unable to delete customer. Err: ${err}`);
     } finally {
         await client.close();
-        return true;
+        return removed;
     }
 }
 
@@ -112,7 +119,89 @@ export async function getCustomerProductIds(email: string): Promise<string[]> {
         console.error('No wishlist was found for this customer.');
     } finally {
         await client.close();
-        return foundWishlist.productIds;
+        return foundWishlist.productIds || [];
+    }
+}
+
+export async function addProduct(email: string, productId: string): Promise<boolean> {
+    const client = new MongoClient(uri);
+    await client.connect();
+
+    const customer = await findCustomer(email);
+    if (!customer) {
+        console.error(`Customer is not registered yet.`);
+        return false;
+    }
+
+    const wishlist = await client.db().collection('wishlists').findOne({ email: email });
+    if (!!wishlist && wishlist.productIds > 0) {
+        const existingProductId = wishlist.productIds.find(id => id == productId);
+
+        if (!!existingProductId) {
+            console.error('Product is already added to the wishlist.');
+            return false;
+        }
+    }
+
+    let updated = false;
+    try {
+        const newWishlist: Wishlist = {
+            email: email,
+            productIds: [ ...wishlist.productIds, productId ]
+        }
+
+        await client.db().collection('wishlists').updateOne(
+            { _id: wishlist._id },
+            { $set: newWishlist },
+            { upsert: true }
+        );
+        console.log('Wishlist was modified!');
+        updated = true;
+    } catch (err) {
+        console.log(`Unable to update wishlist. Err: ${err}`);
+    } finally {
+        await client.close();
+        return updated;
+    }
+}
+
+export async function removeProduct(email: string, productId: string): Promise<boolean> {
+    const client = new MongoClient(uri);
+    await client.connect();
+
+    const customer = await findCustomer(email);
+    if (!customer) {
+        console.error(`Customer is not registered yet.`);
+        return false;
+    }
+
+    const wishlist = await client.db().collection('wishlists').findOne({ email: email });
+    if (!wishlist || wishlist.productIds == 0) {
+        console.error('There are no products in the wishlist.');
+        return false;
+    }
+
+    let updated = false;
+    try {
+        const newProductIds = wishlist.productIds.filter(id => id != productId);
+
+        const newWishlist: Wishlist = {
+            email: email,
+            productIds: newProductIds
+        }
+
+        await client.db().collection('wishlists').updateOne(
+            { _id: wishlist._id },
+            { $set: newWishlist },
+            { upsert: false }
+        );
+        console.log('Wishlist was modified!');
+        updated = true;
+    } catch (err) {
+        console.log(`Unable to update wishlist. Err: ${err}`);
+    } finally {
+        await client.close();
+        return updated;
     }
 }
 
