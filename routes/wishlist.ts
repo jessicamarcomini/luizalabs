@@ -1,6 +1,6 @@
 import * as express from 'express';
 import axios, { AxiosRequestConfig } from 'axios';
-import * as db from '../datahandling';
+import * as db from '../database';
 
 const router = express.Router();
 

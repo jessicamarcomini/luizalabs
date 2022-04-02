@@ -1,8 +1,53 @@
 import * as express from 'express';
-import { Customer } from '../types';
-import * as db from '../datahandling';
+import axios, { AxiosRequestConfig } from 'axios';
+import { Customer, Product } from '../types';
+import * as db from '../database';
+import * as auth from '../auth';
 
 const router = express.Router();
+
+router.get('/:email', async (req, res, next) => {
+    const email = req.params.email;
+
+    const autheCustomer = await auth.authenticateUser(email);
+    if (!autheCustomer) {
+        console.error(`Email "${email} is not in the database."`);
+
+        res.json({
+            status: 'error',
+            message: 'Cliente não encontrado.'
+        });
+
+    } else {
+        const wishlist: Product[] = [];
+
+        const productIds = await db.getCustomerProductIds(autheCustomer.email);
+        if (productIds.length > 0 ) {
+            for (const id of productIds) {
+                const options: AxiosRequestConfig = {
+                    method: 'GET',
+                    url: `http://challenge-api.luizalabs.com/api/product/${id}/`
+                }
+                const product = await axios.request(options);
+                if (!product) {
+                    console.error('Product not found!');
+                } else {
+                    wishlist.push(product.data);
+                }
+            }
+        }
+
+        res.json({
+            status: 'success',
+            message: 'Informações do cliente e sua wishlist foram encontradas.',
+            data: {
+                email: autheCustomer.email,
+                name: autheCustomer.name,
+                wishlist: wishlist
+            }
+        });
+    }
+});
 
 router.post('/adicionar', async (req, res, next) => {
     const customer: Customer = req.body.customer;
