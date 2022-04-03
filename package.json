@@ -4,7 +4,7 @@
   "description": "desafio luizalabs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && mocha --timeout 280000 ./dist/tests/*.js",
     "server": "tsc && node ./dist/src/main.js"
   },
   "repository": {
@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/jessicamarcomini/luizalabs#readme",
   "devDependencies": {
+    "@types/mocha": "^9.1.0",
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2",
     "typescript": "^4.6.3"
   },
   "dependencies": {
