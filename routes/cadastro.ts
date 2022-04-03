@@ -1,7 +1,7 @@
 import * as express from 'express';
 import axios, { AxiosRequestConfig } from 'axios';
-import { Customer, Product } from '../types';
-import * as db from '../database';
+import { Customer, Product } from '../src/types';
+import * as db from '../src/database';
 
 const router = express.Router();
 
@@ -52,11 +52,20 @@ router.post('/adicionar', async (req, res, next) => {
     const customer: Customer = req.body.customer;
 
     if (!customer) {
-        console.error('Wrong customer data format.');
+        console.error('Missing customer data.');
 
         res.json({
             status: 'error',
-            message: 'Dados do cliente não estão corretos.'
+            message: 'Dados do cliente não foram fornecidos.'
+        });
+        return;
+    }
+
+    const emailIsValid = /\w+\@\w+/.test(customer.email);
+    if (!emailIsValid) {
+        res.json({
+            status: 'error',
+            message: 'O email não é válido.'
         });
         return;
     }
