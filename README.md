@@ -24,12 +24,13 @@ Apos instalar o NodeJS,
     
     `npm ci`
 
-3. Na mesma pasta, rode o comando abaixo:   
+3. Na mesma pasta, rode o comando abaixo:  
+
     `npm run server`
+    
+    Este comando compila o projeto em typescript, cria uma pasta de output "dist" onde se encontram os arquivos .js transpilados e então executa o arquivo "main.js" inicializando o server em http://localhost:8080/.
 
-Este comando compila o projeto em typescript, cria uma pasta de output "dist" onde se encontram os arquivos .js transpilados e então executa o arquivo "main.js" inicializando o server em http://localhost:8080/.
-
-*Obs: é importante manter o endereço e porta como apresentados (localhost:8080) porque na configuração de acesso ao banco de dados, esse endereço é autorizado.*
+    *Obs: é importante manter o endereço e porta como apresentados (localhost:8080) porque na configuração de acesso ao banco de dados, esse endereço é autorizado.*
 
 ## Rotas e endpoints
 
@@ -162,7 +163,16 @@ Para execução dos testes unitários,
     `npm run tests`
 
 
+
+## Considerações
+Algumas considerações da autora:
+- Acabei utilizando uma database do MongoDB Atlas que eles hosteam de graça para propósitos de aprendizagem. Por esse motivo (e por não haver dados sensíveis nesse exercício) a string de acesso a url da minha database está hardcoded no código mesmo com intuito de facilitar o acesso.
+
+- Incluí um usuário "admin" que chamei de "u_luizalabs" para autorizar acesso a todos os endpoints ao invés de buscar o usuário no banco de dados (até menciono na seção abaixo que esse é o meu proximo passo :) ). O password e username na autenticação e autorização também estão hardcoded para facilitar (assumindo aqui que o foco seja o gerenciamento dessas etapas da API e não o valor das credenciais). 
+
+
 ## Próximos Passos
 
 1. Sincronizar autenticação e autorização com o banco de dados checando as credenciais e permissões dos usuários.
 2. Remover acesso ao banco de dados da url hardcoded em database.ts e substituir por env vars.
+
