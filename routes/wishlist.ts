@@ -8,16 +8,22 @@ router.post('/adicionar', async (req, res, next) => {
     const email = req.body.email;
     const productId = req.body.productId;
 
-    const options: AxiosRequestConfig = {
-        method: 'GET',
-        url: `http://challenge-api.luizalabs.com/api/product/${productId}/`
-    }
-    const product = await axios.request(options);
-    if (!product.data) {
-        res.json({
-            status: 'error',
-            message: `Produto com id "${productId}" não existe.`
-        });
+    try {
+        const options: AxiosRequestConfig = {
+            method: 'GET',
+            url: `http://challenge-api.luizalabs.com/api/product/${productId}/`
+        }
+        await axios.request(options);
+    } catch (error) {
+        if (error.response.status == 404) {
+            res.json({
+                status: 'error',
+                message: `Produto com id "${productId}" não existe.`
+            });
+        }
+
+        console.error(`Error accessing products API: ${error.response.status} - ${error.response.statusText}`);
+        return;
     }
 
     const addedProduct = await db.addProduct(email, productId);
@@ -26,6 +32,7 @@ router.post('/adicionar', async (req, res, next) => {
             status: 'error',
             message: 'Não foi possível adicionar o produto à wishlist.'
         });
+        return;
     }
 
     res.json({
@@ -44,6 +51,7 @@ router.post('/remover', async (req, res, next) => {
             status: 'error',
             message: 'Não foi possível remover o produto.'
         });
+        return;
     }
 
     res.json({

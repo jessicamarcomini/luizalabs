@@ -2,15 +2,14 @@ import * as express from 'express';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Customer, Product } from '../types';
 import * as db from '../database';
-import * as auth from '../auth';
 
 const router = express.Router();
 
 router.get('/:email', async (req, res, next) => {
     const email = req.params.email;
 
-    const autheCustomer = await auth.authenticateUser(email);
-    if (!autheCustomer) {
+    const foundCustomer = await db.findCustomer(email);
+    if (!foundCustomer) {
         console.error(`Email "${email} is not in the database."`);
 
         res.json({
@@ -21,7 +20,7 @@ router.get('/:email', async (req, res, next) => {
     } else {
         const wishlist: Product[] = [];
 
-        const productIds = await db.getCustomerProductIds(autheCustomer.email);
+        const productIds = await db.getCustomerProductIds(foundCustomer.email);
         if (productIds.length > 0 ) {
             for (const id of productIds) {
                 const options: AxiosRequestConfig = {
@@ -41,8 +40,8 @@ router.get('/:email', async (req, res, next) => {
             status: 'success',
             message: 'Informações do cliente e sua wishlist foram encontradas.',
             data: {
-                email: autheCustomer.email,
-                name: autheCustomer.name,
+                email: foundCustomer.email,
+                name: foundCustomer.name,
                 wishlist: wishlist
             }
         });
@@ -59,6 +58,7 @@ router.post('/adicionar', async (req, res, next) => {
             status: 'error',
             message: 'Dados do cliente não estão corretos.'
         });
+        return;
     }
 
     const addedCustomer = await db.addCustomer(customer);
@@ -67,6 +67,7 @@ router.post('/adicionar', async (req, res, next) => {
             status: 'error',
             message: 'Cliente não foi adicionado.'
         });
+        return;
     }
 
     res.json({
@@ -97,6 +98,7 @@ router.post('/atualizar', async (req, res, next) => {
             status: 'error',
             message: 'Atualização não foi efetuada.'
         });
+        return;
     }
 
     res.json({
@@ -114,6 +116,7 @@ router.post('/remover', async (req, res, next) => {
             status: 'error',
             message: 'Não foi possível remover o cliente do banco de dados.'
         });
+        return;
     }
 
     res.json({

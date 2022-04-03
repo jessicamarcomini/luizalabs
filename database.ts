@@ -2,18 +2,7 @@
 import { MongoClient } from 'mongodb';
 import { Customer, Wishlist } from './types';
 
-//FIXME: send password and user separately in email
-const uri = "";
-
-async function listCollections(): Promise<void> {
-    const client = new MongoClient(uri);
-    await client.connect();
-
-    const colls = await client.db().listCollections().toArray();
-    console.log(await colls);
-
-    await client.close();
-}
+const uri = "mongodb+srv://jessicamarcomini:KBWXdT2FI5ydSSPV@cluster0.gzyci.mongodb.net/luizalabs?retryWrites=true&w=majority";
 
 export async function findCustomer(email: string): Promise<Customer> {
     const client = new MongoClient(uri);
@@ -134,7 +123,8 @@ export async function addProduct(email: string, productId: string): Promise<bool
     }
 
     const wishlist = await client.db().collection('wishlists').findOne({ email: email });
-    if (!!wishlist && wishlist.productIds > 0) {
+
+    if (!!wishlist && wishlist.productIds.length > 0) {
         const existingProductId = wishlist.productIds.find(id => id == productId);
 
         if (!!existingProductId) {
@@ -204,13 +194,3 @@ export async function removeProduct(email: string, productId: string): Promise<b
         return updated;
     }
 }
-
-// getCustomerProductIds('je.marcom@gmail.com');
-
-// removeCustomer('je.marcom@gmail.com');
-
-// updateCustomer('test@gmail.com', 'Jessica Marcomini', 'je.marcom@gmail.com');
-
-// findCustomer('test@gmail.com');
-
-// addCustomer({ email: 'je.marcom@gmail.com', name: 'Jessica Marcomini' });
