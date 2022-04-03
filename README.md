@@ -1,7 +1,6 @@
 ﻿# LuizaLabs Desafio Técnico
 
-Esse projeto contém a implementação do desafio técnico da LuizaLabs no qual interage com API de produtos dos mesmos.
-
+Esse projeto contém a implementação do desafio técnico do LuizaLabs interagindo com API de produtos dos mesmos.
 
 ## Requisitos e Ferramentas
 Esse projeto utiliza os seguintes:
@@ -63,7 +62,7 @@ Exemplo:
 
 Adiciona um cliente novo no banco de dados.
 
-Body:
+*Body*:
 ```
 {
     customer: {
@@ -79,7 +78,7 @@ Body:
 
 Atualiza um cadastro existente com nome e/ou email.
 
-Body:
+*Body*:
 ```
 {
     email: <email atual do cliente>,
@@ -96,7 +95,7 @@ Body:
 
 Remove um cadastro existente.
 
-Body:
+*Body*:
 ```
 {
     email: <email atual do cliente>
@@ -109,7 +108,7 @@ Body:
 
 Adiciona um produto à wishlist de favoritos de um cliente cadastrado.
 
-Body:
+*Body*:
 ```
 {
     email: <email do cliente>,
@@ -123,7 +122,7 @@ Body:
 
 Remove um produto da wishlist de favoritos de um cliente cadastrado.
 
-Body:
+*Body*:
 ```
 {
     email: <email do cliente>,
