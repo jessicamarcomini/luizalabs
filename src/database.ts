@@ -4,6 +4,23 @@ import { Customer, Wishlist } from './types';
 
 const uri = "mongodb+srv://jessicamarcomini:KBWXdT2FI5ydSSPV@cluster0.gzyci.mongodb.net/luizalabs?retryWrites=true&w=majority";
 
+export async function getCustomers(): Promise<Customer[]> {
+    const client = new MongoClient(uri);
+    await client.connect();
+
+    let customers;
+    try {
+        customers = await client.db().collection('customers').find().toArray();
+
+        console.log(customers);
+    } catch (err) {
+        console.log(`Unable to add customer to the database. Err: ${err}`);
+    } finally {
+        await client.close();
+        return customers;
+    }
+}
+
 export async function findCustomer(email: string): Promise<Customer> {
     const client = new MongoClient(uri);
     await client.connect();

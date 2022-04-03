@@ -32,6 +32,8 @@ app.get('/', (req, res, next) => {
     res.sendStatus(200);
 });
 
+app.use('/clientes', require('../routes/clientes'));
+
 app.use('/clientes/cadastro', require('../routes/cadastro'));
 
 app.use('/clientes/wishlist', require('../routes/wishlist'));
@@ -39,4 +41,3 @@ app.use('/clientes/wishlist', require('../routes/wishlist'));
 app.listen(8080, () => {
     console.log('Server running in http://127.0.0.1:8080')
 });
-
