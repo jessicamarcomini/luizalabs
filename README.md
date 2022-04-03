@@ -29,6 +29,7 @@ Apos instalar o NodeJS,
 
 Este comando compila o projeto em typescript, cria uma pasta de output "dist" onde se encontram os arquivos .js transpilados e então executa o arquivo "main.js" inicializando o server em http://localhost:8080/.
 
+*Obs: é importante manter o endereço e porta como apresentados (localhost:8080) porque na configuração de acesso ao banco de dados, esse endereço é autorizado.*
 
 ## Rotas e endpoints
 
