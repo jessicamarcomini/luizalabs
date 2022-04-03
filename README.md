@@ -18,15 +18,14 @@ Apos instalar o NodeJS,
 
 1. Clone este repositório.
 
-`git clone https://github.com/jessicamarcomini/luizalabs.git`
+    `git clone https://github.com/jessicamarcomini/luizalabs.git`
 
 2. Na pasta root, onde se encontra o arquivo "package.json", rode o comando abaixo para que o gerenciador de pacotes NPM instale todas as dependências do projeto.
+    
+    `npm ci`
 
-`npm ci`
-
-3. Na mesma pasta, rode o comando abaixo:
-
-`npm run server`
+3. Na mesma pasta, rode o comando abaixo:   
+    `npm run server`
 
 Este comando compila o projeto em typescript, cria uma pasta de output "dist" onde se encontram os arquivos .js transpilados e então executa o arquivo "main.js" inicializando o server em http://localhost:8080/.
 
@@ -143,9 +142,9 @@ Remove um produto da wishlist de favoritos de um cliente cadastrado.
 
 ## Testes
 
-Para testes manuais e realização dos http requests, é sugerido a utilização do [Postman](https://www.postman.com/).
+Para testes manuais e realização dos http requests, é sugerida pela autora a utilização do [Postman](https://www.postman.com/).
 
-Veja na imagem abaixo um exemplo de request GET /clientes/cadastro/:email feito através do Postman com o projeto rodando em localhost:8080.
+Veja abaixo um exemplo do GET request em /clientes/cadastro/:email feito através do Postman com o projeto rodando em localhost:8080.
 
 ![image](https://user-images.githubusercontent.com/13108925/161439074-d4671c27-6529-495a-aeeb-17bcbc2f6d05.png)
 
@@ -154,12 +153,12 @@ Veja na imagem abaixo um exemplo de request GET /clientes/cadastro/:email feito 
 Para execução dos testes unitários,
 
 1. Inicialize o server local.
+    
+    `npm run server`
 
-`npm run server`
-
-2. Rode os testes:
-
-`npm run tests`
+2. Rode os testes.
+    
+    `npm run tests`
 
 
 ## Próximos Passos
