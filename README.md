@@ -7,6 +7,7 @@ Esse projeto utiliza os seguintes:
 - NodeJS
 - TypeScript
 - MongoDB
+- [Mocha](https://mochajs.org/) (js tests framework)
 
 So é necessario ter o [NodeJS]((https://nodejs.org/en/)) pré instalado para a execuçao do projeto. Outras dependencias sao gerenciadas pelo gerenciador de pacotes NPM.
 
@@ -136,8 +137,14 @@ Para testes manuais e realizaçao dos http requests, é sugerido a utilizaçao d
 Veja na imagem abaixo um exemplo de request GET /clientes/cadastro/:email feito através do Postman com o projeto rodando em localhost:8080.
 ![image](https://user-images.githubusercontent.com/13108925/161439074-d4671c27-6529-495a-aeeb-17bcbc2f6d05.png)
 
+Para execuçao dos testes unitarios,
+1. Inicialize o server local.
 
+`npm run server`
 
+2. Rode os testes:
+
+`npm run tests`
 
 
 ## Proximos Passos
