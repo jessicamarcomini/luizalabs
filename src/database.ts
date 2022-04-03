@@ -11,8 +11,6 @@ export async function getCustomers(): Promise<Customer[]> {
     let customers;
     try {
         customers = await client.db().collection('customers').find().toArray();
-
-        console.log(customers);
     } catch (err) {
         console.log(`Unable to add customer to the database. Err: ${err}`);
     } finally {
@@ -105,6 +103,12 @@ export async function removeCustomer(email: string): Promise<boolean> {
     try {
         await client.db().collection('customers').deleteOne({ _id: customer._id });
         console.log('Customer was deleted!');
+
+        const wishlist = await client.db().collection('wishlists').findOne({ email: email });
+        if (!!wishlist) {
+            await client.db().collection('wishlists').deleteOne({ _id: wishlist._id });
+        }
+
         removed = true;
     } catch (err) {
         console.log(`Unable to delete customer. Err: ${err}`);
@@ -125,7 +129,8 @@ export async function getCustomerProductIds(email: string): Promise<string[]> {
         console.error('No wishlist was found for this customer.');
     } finally {
         await client.close();
-        return foundWishlist.productIds || [];
+        const productIds = !!foundWishlist ? foundWishlist.productIds : [];
+        return productIds;
     }
 }
 
@@ -152,13 +157,16 @@ export async function addProduct(email: string, productId: string): Promise<bool
 
     let updated = false;
     try {
+        const existingProductIds = !wishlist ? [] : wishlist.productIds;
+        const existingId = !wishlist ? null : wishlist._id;
+
         const newWishlist: Wishlist = {
             email: email,
-            productIds: [ ...wishlist.productIds, productId ]
+            productIds: [ ...existingProductIds, productId ]
         }
 
         await client.db().collection('wishlists').updateOne(
-            { _id: wishlist._id },
+            { _id: existingId },
             { $set: newWishlist },
             { upsert: true }
         );

@@ -1,6 +1,4 @@
 import * as express from 'express';
-import axios, { AxiosRequestConfig } from 'axios';
-import { Customer, Product } from '../src/types';
 import * as db from '../src/database';
 
 const router = express.Router();

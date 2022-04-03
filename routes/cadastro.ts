@@ -61,7 +61,7 @@ router.post('/adicionar', async (req, res, next) => {
         return;
     }
 
-    const emailIsValid = /\w+\@\w+/.test(customer.email);
+    const emailIsValid = /.*\@.*/.test(customer.email);
     if (!emailIsValid) {
         res.json({
             status: 'error',

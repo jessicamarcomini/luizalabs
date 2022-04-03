@@ -48,7 +48,7 @@ Retorna todos os cadastros no banco de dados.
 
 **GET /clientes/cadastro/:email**
 
-Retorna o cadastro (nome + email) correspondente ao email.
+Retorna o cadastro e a wishlist (nome + email + wishlist) correspondente ao email.
 
 Parametro *email* deve corresponder a um email ja cadastrado no banco de dados.
 
