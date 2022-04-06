@@ -13,7 +13,7 @@ describe('00-clientes', function() {
     });
 
     after(async function() {
-        await utils.cleanupDatabase();        
+        await utils.cleanupDatabase();
     });
 
 
@@ -28,11 +28,11 @@ describe('00-clientes', function() {
 
         const customers = await axios.request(options);
         const data = customers.data.data;
-        
+
         expect(data).not.to.be.undefined;
 
         const foundEmail = data.find(customer => customer.email == utils.mochaUserEmail);
-        
+
         expect(foundEmail).not.to.be.undefined;
     });
 });

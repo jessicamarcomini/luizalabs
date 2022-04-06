@@ -21,13 +21,13 @@ Apos instalar o NodeJS,
     `git clone https://github.com/jessicamarcomini/luizalabs.git`
 
 2. Na pasta root, onde se encontra o arquivo "package.json", rode o comando abaixo para que o gerenciador de pacotes NPM instale todas as dependências do projeto.
-    
+
     `npm ci`
 
-3. Na mesma pasta, rode o comando abaixo:  
+3. Na mesma pasta, rode o comando abaixo:
 
     `npm run server`
-    
+
     Este comando compila o projeto em typescript, cria uma pasta de output "dist" onde se encontram os arquivos .js transpilados e então executa o arquivo "main.js" inicializando o server em http://localhost:8080/.
 
     *Obs: é importante manter o endereço e porta como apresentados (localhost:8080) porque na configuração de acesso ao banco de dados, esse endereço é autorizado.*
@@ -155,12 +155,12 @@ Veja abaixo um exemplo do GET request em /clientes/cadastro/:email feito atravé
 Para execução dos testes unitários,
 
 1. Inicialize o server local.
-    
+
     `npm run server`
 
 2. Rode os testes.
-    
-    `npm run tests`
+
+    `npm run test`
 
 
 
